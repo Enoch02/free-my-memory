@@ -24,7 +24,8 @@ def main():
         if cpu_percent < 10.0:  # TODO: figure out my typical usage while not building
             kill_java()
             time.sleep(args.delay)
-        type_and_erase("Probably working on something serious...")
+        else:
+            type_and_erase("Probably working on something serious...")
 
 
 def kill_java():
