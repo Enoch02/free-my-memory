@@ -18,34 +18,30 @@ def main():
     )
     args = parser.parse_args()
 
-    while True:
-        type_and_erase("Running...")
-        cpu_percent = psutil.cpu_percent(interval=1)
-        if cpu_percent < 10.0:  # TODO: figure out my typical usage while not building
-            kill_java()
-            time.sleep(args.delay)
-        else:
-            type_and_erase("Probably working on something serious...")
+    kill_java(delay=args.delay)
 
 
-def kill_java():
+def kill_java(delay: int):
     processes = psutil.process_iter()
     count = 0
 
-    type_and_erase("Searching for processes...")
-    for process in processes:
-        if "java" in process.name():
-            cpu_percent = psutil.cpu_percent(interval=1)
-            if cpu_percent < 5.0: # CPU util might have changed..
-                process.kill()
-                count += 1
-            else:
-                type_and_erase("Probably working on something serious...")
-                
-    if count > 0:
-        type_and_erase(f"{count} Java processes killed")
-    else:
-        type_and_erase("None found!")
+    while True:
+        type_and_erase("Searching for processes...")
+        for process in processes:
+            if "java" in process.name():
+                cpu_percent = psutil.cpu_percent(interval=1)
+                if cpu_percent < 15:
+                    process.kill()
+                    if not psutil.pid_exists(process.pid):
+                        count += 1
+                else:
+                    type_and_erase("Probably working on something serious...")
+
+        if count > 0:
+            type_and_erase(f"{count} Java processes killed")
+            time.sleep(delay)
+        else:
+            type_and_erase("None found!")
 
 
 def type_and_erase(text, delay=0.1):
