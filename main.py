@@ -57,4 +57,8 @@ def type_and_erase(text, delay=0.1):
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nProgram has ended")
+        sys.exit()
