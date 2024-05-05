@@ -30,18 +30,14 @@ def kill_java(delay: int):
     for process in processes:
         if "java" in process.name():
             cpu_percent = psutil.cpu_percent(interval=1)
-            print(process)  # TODO: remove
-
-            if cpu_percent < 20:
+            if cpu_percent < 5.0: # CPU util might have changed..
                 process.kill()
                 count += 1
             else:
                 type_and_erase("Probably working on something serious...")
-
+                
     if count > 0:
-        # type_and_erase(f"{count} Java processes killed")
-        print(f"{count} Java process killed")
-        time.sleep(delay)
+        type_and_erase(f"{count} Java processes killed")
     else:
         type_and_erase("None found!")
 
