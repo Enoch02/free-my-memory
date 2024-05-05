@@ -27,7 +27,6 @@ class Tests(unittest.TestCase):
 
         for process in processes:
             if "java" in process.name():
-                print(process)  # TODO: remove
                 if process.status == "running":
                     running_java_count += 1
 
