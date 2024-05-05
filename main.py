@@ -13,22 +13,16 @@ def main():
         "--delay",
         "-d",
         help="Delay (in secs) to check for pesky Java processes",
-        default=5,
+        default=0,
         type=int,
     )
     args = parser.parse_args()
 
     while True:
-        type_and_erase("Running...")
-        cpu_percent = psutil.cpu_percent(interval=1)
-        if cpu_percent < 10.0:  # TODO: figure out my typical usage while not building
-            kill_java()
-            time.sleep(args.delay)
-        else:
-            type_and_erase("Probably working on something serious...")
+        kill_java(delay=args.delay)
 
 
-def kill_java():
+def kill_java(delay: int):
     processes = psutil.process_iter()
     count = 0
 
@@ -36,14 +30,18 @@ def kill_java():
     for process in processes:
         if "java" in process.name():
             cpu_percent = psutil.cpu_percent(interval=1)
-            if cpu_percent < 5.0: # CPU util might have changed..
+            print(process)  # TODO: remove
+
+            if cpu_percent < 20:
                 process.kill()
                 count += 1
             else:
                 type_and_erase("Probably working on something serious...")
-                
+
     if count > 0:
-        type_and_erase(f"{count} Java processes killed")
+        # type_and_erase(f"{count} Java processes killed")
+        print(f"{count} Java process killed")
+        time.sleep(delay)
     else:
         type_and_erase("None found!")
 
@@ -61,4 +59,8 @@ def type_and_erase(text, delay=0.1):
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nProgram has ended")
+        sys.exit()
