@@ -32,8 +32,12 @@ def kill_java(delay: int):
             cpu_percent = psutil.cpu_percent(interval=1)
 
             if cpu_percent < 20:
-                process.kill()
-                count += 1
+                try:
+                    process.kill()
+                    count += 1
+
+                except psutil.NoSuchProcess:
+                    type_and_erase("Java process left peacefully!")
             else:
                 type_and_erase("Probably working on something serious...")
 
