@@ -25,14 +25,19 @@ def main():
 def kill_java(delay: int):
     processes = psutil.process_iter()
     count = 0
+    java_processes = list(filter(lambda p: "java" in p.name(), list(processes)))
+
+    if len(java_processes) <= 1:
+        type_and_erase("Not enough processes")
+        return
 
     type_and_erase("Searching for processes...")
     try:
-        for process in processes:
+        for process in java_processes:
             if "java" in process.name():
                 cpu_percent = psutil.cpu_percent(interval=1)
 
-                if cpu_percent < 20:
+                if cpu_percent < 10:
 
                     process.kill()
                     count += 1
