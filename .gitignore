@@ -1,3 +1,5 @@
 /venv
 .DS_Store
 __pycache__/main.cpython-312.pyc
+*.egg-info/
+__pycache__/

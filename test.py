@@ -1,7 +1,7 @@
 import unittest
 import psutil
 import subprocess
-from main import kill_java
+from fmm.main import kill_java
 
 
 # TODO: make the function pass this test

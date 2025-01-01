@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=65.5.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fmm"
+version = "0.0.1"
+description = "A CLI application removes Java processes created by Android Studio after it's 'idle'"
+readme = "README.md"
+authors = [{ name = "Enoch Adesanya", email = "adesanyaenoch@proton.me" }]
+dependencies = [
+    "psutil >= 6.0.0",
+]
+
+[project.scripts]
+fmm = "fmm.main:run"

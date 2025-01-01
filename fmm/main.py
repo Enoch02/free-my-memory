@@ -5,6 +5,7 @@ import time
 
 
 # TODO: add a timer that kills this script after n amount of time
+# TODO: migrate to click?
 def main():
     parser = argparse.ArgumentParser(
         description="Automagically kill Java processes while using Android Studio on your low memory PC!!"
@@ -25,26 +26,30 @@ def main():
 def kill_java(delay: int):
     processes = psutil.process_iter()
     count = 0
-    java_processes = list(filter(lambda p: "java" in p.name(), list(processes)))
+    java_processes = []
+
+    try:
+        java_processes = list(filter(lambda p: "java" in p.name(), list(processes)))
+    except psutil.NoSuchProcess:
+        return
 
     if len(java_processes) <= 1:
         type_and_erase("Not enough processes")
         return
 
     type_and_erase("Searching for processes...")
-    try:
-        for process in java_processes:
+    for process in java_processes:
+        try:
             if "java" in process.name():
                 cpu_percent = psutil.cpu_percent(interval=1)
 
                 if cpu_percent < 10:
-
                     process.kill()
                     count += 1
                 else:
                     type_and_erase("Probably working on something serious...")
-    except psutil.NoSuchProcess:
-        type_and_erase("Java process left peacefully!")
+        except psutil.NoSuchProcess:
+                type_and_erase("Java process left peacefully!")
 
     if count > 0:
         type_and_erase(f"{count} Java processes killed")
@@ -65,9 +70,9 @@ def type_and_erase(text, delay=0.1):
         time.sleep(delay)
 
 
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\nProgram has ended")
-        sys.exit()
+def run():
+        try:
+            main()
+        except KeyboardInterrupt:
+            print("\nProgram has ended")
+            sys.exit()
